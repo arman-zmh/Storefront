@@ -56,7 +56,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
-    autocomplete_fields = ['featured_product']
+    #autocomplete_fields = ['featured_product']
     list_display = ['title', 'products_count']
     search_fields = ['title']
 
