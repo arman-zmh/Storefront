@@ -7,8 +7,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Count
-from .models import Product, Collection, OrderItem
-from .serializers import ProductSerializer, CollectionSerializer
+from .models import Product, Collection, OrderItem, Review
+from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
@@ -45,3 +45,7 @@ class CollectionViewSet(ModelViewSet):
         
         collection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)"""
+    
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
