@@ -17,7 +17,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from .models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer, Order
 from .pagination import DefualtPagination
 from .filters import ProductFilter
-from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, CartItemSeriializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer, CreateOrderSerializer
+from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, CartItemSeriializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer, CreateOrderSerializer, UpdateOrderSerializer
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
@@ -121,7 +121,7 @@ class CustomerViewSet(ModelViewSet):
         
 
 class OrderViewSet(ModelViewSet):
-    http_method_names = ['get', 'patch', 'delete', 'head', 'options']
+    http_method_names = ['get','post', 'patch', 'delete', 'head', 'options']
     def get_permissions(self):
         if self.request.method in ['PATCH', 'DELETE']:
             return [IsAdminUser()]
@@ -140,6 +140,8 @@ class OrderViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateOrderSerializer
+        elif self.request.method == 'PATCH':
+            return UpdateOrderSerializer
         return OrderSerializer
     
     def get_queryset(self):

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.db import transaction
+from .signals import oreder_created
 from .models import Product, Collection, Review, Cart, CartItem, Customer, Order, OrderItem
 from decimal import Decimal
 
@@ -107,8 +108,14 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'customer', 'placed_at', 'payment_status', 'items']
 
+class UpdateOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['payment_status']
+
 class CreateOrderSerializer(serializers.Serializer):
     cart_id = serializers.UUIDField()
+
     def validate_cart_id(self, cart_id):
         if not Cart.objects.filter(pk=cart_id).exists():
             raise serializers.ValidationError('No cart with given id.')
@@ -135,5 +142,7 @@ class CreateOrderSerializer(serializers.Serializer):
 
             OrderItem.objects.bulk_create(order_items)
             Cart.objects.filter(pk=cart_id).delete()
+            
+            oreder_created.send_robust(self.__class__, order=order)
 
             return order
